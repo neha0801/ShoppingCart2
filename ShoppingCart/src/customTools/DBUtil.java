@@ -173,11 +173,11 @@ public class DBUtil {
 		String sql;
 		Query query;
 		if(user==null){
-			sql = "Delete from Cart c  where c.status=0 and c.status=0 and c.userprofile is null";
+			sql = "Delete from Cart c  where c.status=0 and c.userprofile is null";
 			System.out.println(sql);
 			query = em.createQuery(sql, Cart.class);
 		} else{
-			sql= "Delete from Cart c  where c.status=0 and c.status=0 and c.userprofile :user";
+			sql= "Delete from Cart c  where c.status=0 and c.userprofile = :user";
 			query = em.createQuery(sql, Cart.class).setParameter("user", user);
 		}
 		trans.begin();

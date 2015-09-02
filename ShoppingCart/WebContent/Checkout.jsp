@@ -30,13 +30,10 @@ body {
 	font-size: 20px;
 }
 
-nav {
-	font-family: "Edwardian Script ITC";
-	color: red;
-}
- 
 </style>
 </head>
+
+<body>
 <nav class="navbar navbar-inverse">
 <div class="container-fluid">
 	<div class="navbar-brand">EvilCorp-Gulp Web Store</div>
@@ -44,14 +41,14 @@ nav {
 		<ul class="nav navbar-nav">
 			<li><a href="Welcome.jsp" style="color: white"><b>Home</b></a></li>
 			<% Userprofile user = (Userprofile)session.getAttribute("user");
-			if(user!=null){%>
+			if(user!=null){  request.setAttribute("userName", user.getUserName()); %>
+				<li><a href="Cart" style="color: white"><b>${userName}'s Cart</b></a></li>
 				<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
 			<%}	%>
 		</ul>
 	</div>
 </div>
 </nav>
-<body>
 <a href="ExploreProducts?goto=y" class="btn pull-right btn-primary btn-lg"  >Go Back</a><br><br>
 		<h1 align=center>
 				<b>Confirm your order</b><br><br>

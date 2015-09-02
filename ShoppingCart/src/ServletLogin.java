@@ -38,7 +38,7 @@ public class ServletLogin extends HttpServlet {
 		if(request.getParameter("logout").equalsIgnoreCase("yes")){
 			HttpSession session = request.getSession();
 			session.invalidate();
-			getServletContext().getRequestDispatcher("/LoginForm.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/Welcome.jsp").forward(request, response);
 		}
 
 	}
