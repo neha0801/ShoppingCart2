@@ -59,7 +59,7 @@ a:active {
 	<div class="navbar-brand" style=color:red>EvilCorp-Gulp Web Store</div>
 	<div>
 		<ul class="nav navbar-nav">
-			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
+			<li><a href="Welcome.jsp" style="color: white"><b>Home</b></a></li>
 			<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
 		</ul>
 	</div>

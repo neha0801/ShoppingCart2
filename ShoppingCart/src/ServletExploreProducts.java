@@ -48,7 +48,6 @@ public class ServletExploreProducts extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String gotoStr =request.getParameter("goto");		
 		HttpSession session = request.getSession();
 		/*String user ="", message="";
 		if(gotoStr!=null){

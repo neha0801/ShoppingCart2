@@ -1,3 +1,4 @@
+<%@page import="model.Userprofile"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -41,7 +42,11 @@ nav {
 	<div class="navbar-brand">EvilCorp-Gulp Web Store</div>
 	<div>
 		<ul class="nav navbar-nav">
-			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
+			<li><a href="Welcome.jsp" style="color: white"><b>Home</b></a></li>
+			<% Userprofile user = (Userprofile)session.getAttribute("user");
+			if(user!=null){%>
+				<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
+			<%}	%>
 		</ul>
 	</div>
 </div>

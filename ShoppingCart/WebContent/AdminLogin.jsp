@@ -42,6 +42,11 @@ navbar {
 <nav class="navbar navbar-inverse" style=font-size:30px>
 <div class="container-fluid">
 	<div class="navbar-brand" style=color:red>EvilCorp-Gulp Web Store</div>
+		<div>
+		<ul class="nav navbar-nav">
+			<li><a href="Welcome.jsp" style="color: white"><b>Home</b></a></li>
+		</ul>
+	</div>
 </div>
 </nav>
 <body>
