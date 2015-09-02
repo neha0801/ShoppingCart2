@@ -48,7 +48,7 @@ public class ServletOrderConfirmation extends HttpServlet {
 		int confirmationNumber = 1+ r.nextInt(1000000);
 
 		message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
-		message += showCart();
+		message += showCart(user);
 		DBUtil.updateStatus(1,user);
 
 		
@@ -56,8 +56,8 @@ public class ServletOrderConfirmation extends HttpServlet {
 		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
 	}
 	
-	private String showCart(){
-		List<Cart> cartList = DBUtil.getCart();
+	private String showCart(Userprofile user){
+		List<Cart> cartList = DBUtil.getCart(user);
 		
 		String tableData ="";
 

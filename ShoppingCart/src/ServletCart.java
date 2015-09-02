@@ -53,33 +53,32 @@ public class ServletCart extends HttpServlet {
 			Double totalPrice = quantity * prodObj.getPrice().doubleValue();  
 			cObj.setTotalprice(totalPrice);
 			cObj.setProduct(prodObj);
-			//cObj.setUserprofile(user);
+			cObj.setUserprofile(user);
 			//System.out.println("userid" + user.getUserId());
-			//cObj.setUseremail(userEmail);
+			
 			cObj.setStatus(0);
 			if(DBUtil.itemExists(cObj)){
 				DBUtil.update(cObj);
 			}else
 				DBUtil.insert(cObj);
 		}		
-		String cartData = showCart();
+		String cartData = showCart(user);
 		request.setAttribute("cartData", cartData);
 		String buttons= "";
-		System.out.println(user);
 		if(user!=null){
 			buttons +=  "<br><a href='Checkout' class='btn pull-right btn-primary btn-lg'>Checkout</a>";
 		}else
 			buttons +=  "<br><a href='UserProfile.jsp' class='btn pull-right btn-primary btn-lg'>CheckOut</a>";
 		buttons +=  "<a href='EditCart?empty=y'class='btn pull-left btn-warning btn-lg'>Empty your cart</a>";
-		Long count = DBUtil.itemsInCart();
+		Long count = DBUtil.itemsInCart(user);
 		System.out.println("count " + count);
 		request.setAttribute("buttons", buttons);
 		request.setAttribute("count", count);
 		getServletContext().getRequestDispatcher("/CartCheckout.jsp").forward(request, response);
 	}
 	
-	private String showCart(){
-		List<Cart> cartList = DBUtil.getCart();
+	private String showCart(Userprofile user){
+		List<Cart> cartList = DBUtil.getCart(user);
 		Double checkoutPrice=0.0;
 		String tableData ="";
 

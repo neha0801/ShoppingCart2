@@ -84,12 +84,12 @@ public class DBUtil {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
 		String sql = "Update Cart c set c.quantity = c.quantity +" + cart.getQuantity() + 
-						" where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
+						" where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0 and c.userprofile=:user";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query = em.createQuery(sql, Cart.class).setParameter("user", cart.getUserprofile());
 		sql = "Update Cart c set c.totalprice= c.quantity *" + cart.getProduct().getPrice()
-				+ " where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
-		Query query1 = em.createQuery(sql, Cart.class);
+				+ " where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0 and c.userprofile=:user";
+		Query query1 = em.createQuery(sql, Cart.class).setParameter("user", cart.getUserprofile());
 		System.out.println(sql);
 		trans.begin();
 		try {
@@ -107,7 +107,7 @@ public class DBUtil {
 	public static void updateStatus(int status,Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Update Cart c set c.userprofile = :user, c.status = 1 where c.status = 0";
+		String sql = "Update Cart c set c.status = 1 where c.status = 0 and c.userprofile=:user";
 		System.out.println(sql);
 		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
 		System.out.println(sql);
@@ -123,12 +123,38 @@ public class DBUtil {
 		}
 	}
 	
-	public static void delete(int prodId) {
+	public static void updateUserCart(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Delete from Cart c  where c.product.productid=" + prodId + " and c.status=0";
+		String sql = "Update Cart c set c.userprofile = :user where c.status = 0";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		System.out.println(sql);
+		trans.begin();
+		try {
+			query.executeUpdate();
+			trans.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+			trans.rollback();
+		} finally {
+			em.close();
+		}
+	}
+	
+	public static void delete(int prodId, Userprofile user) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		EntityTransaction trans = em.getTransaction();
+		String sql;
+		Query query;
+		if(user==null){
+			sql = "Delete from Cart c  where c.product.productid=" + prodId + " and c.status=0 and c.userprofile is null";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql= "Delete from Cart c  where c.product.productid=" + prodId + " and c.status=0 and c.userprofile= :user";
+			query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		}
 		trans.begin();
 		try {
 			query.executeUpdate();
@@ -144,9 +170,16 @@ public class DBUtil {
 	public static void deleteAll(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Delete from Cart c  where c.status=0";
-		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		String sql;
+		Query query;
+		if(user==null){
+			sql = "Delete from Cart c  where c.status=0 and c.status=0 and c.userprofile is null";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql= "Delete from Cart c  where c.status=0 and c.status=0 and c.userprofile :user";
+			query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		}
 		trans.begin();
 		try {
 			query.executeUpdate();
@@ -159,11 +192,21 @@ public class DBUtil {
 		}
 	}
 
-	public static List<Cart> getCart() {
+	public static List<Cart> getCart(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select c from Cart c where c.status=0";
-		System.out.println(sql);
-		TypedQuery<Cart> query = em.createQuery(sql, Cart.class);
+		String sql;
+		TypedQuery<Cart> query ;
+		
+		if(user==null){
+			sql = "select c from Cart c where c.status=0 and c.userprofile is null";	
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql= "select c from Cart c where c.status=0 and c.userprofile= :user";
+			query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		}
+		
+		System.out.println(query);
 		List<Cart> cartList;
 		try {
 			cartList = query.getResultList();
@@ -177,9 +220,17 @@ public class DBUtil {
 	
 	public static List<Cart> getOrderedCart(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select c from Cart c where c.userprofile = :user and c.status=1";
-		
-		TypedQuery<Cart> query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		String sql;
+		TypedQuery<Cart> query;
+		if(user==null){
+			sql = "select c from Cart c where c.status=1 and c.userprofile is null";	
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql = "select c from Cart c where c.userprofile = :user and c.status=1";
+			query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		}
+	
 		System.out.println(sql);
 		List<Cart> cartList;
 		try {
@@ -227,10 +278,19 @@ public class DBUtil {
 
 	public static boolean itemExists(Cart cObj) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select count(c) from Cart c where c.product.productid="
-				+ cObj.getProduct().getProductid() + " and c.status=0";
-		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query;
+		String sql;
+		if(cObj.getUserprofile()==null){
+			sql = "select count(c) from Cart c where c.product.productid="
+					+ cObj.getProduct().getProductid() + " and c.status=0 and c.userprofile is null";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql = "select count(c) from Cart c where c.product.productid="
+					+ cObj.getProduct().getProductid() + " and c.status=0 and c.userprofile = :user";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class).setParameter("user", cObj.getUserprofile());
+		} 
 		long product;
 		try {
 			product = (long) query.getSingleResult();
@@ -277,11 +337,19 @@ public class DBUtil {
 		return true;	
 	}
 	
-	public static Long itemsInCart(){
+	public static Long itemsInCart(Userprofile user){
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select count(c) from Cart c where c.status=0";
-		System.out.println(sql);
-		Query query = em.createQuery(sql, Long.class);
+		Query query;
+		String sql;
+		if(user==null){
+			sql = "select count(c) from Cart c where c.status=0 and c.userprofile is null";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class);
+		} else{
+			sql = "select count(c) from Cart c where c.status=0 and c.userprofile= :user";
+			System.out.println(sql);
+			query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		} 
 		Long cart;
 		try {
 			cart = (long) query.getSingleResult();

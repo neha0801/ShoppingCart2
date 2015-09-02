@@ -52,7 +52,7 @@ public class ServletEditCart extends HttpServlet {
 			if(emptyCart.equalsIgnoreCase("y"))
 				DBUtil.deleteAll(user);
 		}else
-			DBUtil.delete(prodId);
+			DBUtil.delete(prodId,user);
 		getServletContext().getRequestDispatcher("/Cart").forward(request, response);
 	}
 

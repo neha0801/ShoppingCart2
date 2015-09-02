@@ -46,13 +46,13 @@ public class ServletCheckout extends HttpServlet {
 		Userprofile user = (Userprofile) session.getAttribute("user");
 		request.setAttribute("user", user.getUserName());
 		String message="";
-		message = showCart();
+		message = showCart(user);
 		request.setAttribute("message", message);
 		getServletContext().getRequestDispatcher("/Checkout.jsp").forward(request, response);
 	}
 	
-	private String showCart(){
-		List<Cart> cartList = DBUtil.getCart();
+	private String showCart(Userprofile user){
+		List<Cart> cartList = DBUtil.getCart(user);
 		
 		String tableData ="";
 
