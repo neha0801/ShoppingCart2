@@ -53,7 +53,8 @@ public class ServletCart extends HttpServlet {
 			Double totalPrice = quantity * prodObj.getPrice().doubleValue();  
 			cObj.setTotalprice(totalPrice);
 			cObj.setProduct(prodObj);
-			cObj.setUserprofile(user);
+			//cObj.setUserprofile(user);
+			//System.out.println("userid" + user.getUserId());
 			//cObj.setUseremail(userEmail);
 			cObj.setStatus(0);
 			if(DBUtil.itemExists(cObj)){
@@ -70,8 +71,10 @@ public class ServletCart extends HttpServlet {
 		}else
 			buttons +=  "<br><a href='UserProfile.jsp' class='btn pull-right btn-primary btn-lg'>CheckOut</a>";
 		buttons +=  "<a href='EditCart?empty=y'class='btn pull-left btn-warning btn-lg'>Empty your cart</a>";
+		Long count = DBUtil.itemsInCart();
+		System.out.println("count " + count);
 		request.setAttribute("buttons", buttons);
-		//request.setAttribute("user", user);
+		request.setAttribute("count", count);
 		getServletContext().getRequestDispatcher("/CartCheckout.jsp").forward(request, response);
 	}
 	

@@ -144,9 +144,9 @@ public class DBUtil {
 	public static void deleteAll(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Delete from Cart c  where c.userprofile = :user and c.status=0";
+		String sql = "Delete from Cart c  where c.status=0";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		Query query = em.createQuery(sql, Cart.class);
 		trans.begin();
 		try {
 			query.executeUpdate();
@@ -180,6 +180,23 @@ public class DBUtil {
 		String sql = "select c from Cart c where c.userprofile = :user and c.status=1";
 		
 		TypedQuery<Cart> query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		System.out.println(sql);
+		List<Cart> cartList;
+		try {
+			cartList = query.getResultList();
+			if (cartList == null || cartList.isEmpty())
+				cartList = null;
+		} finally {
+			em.close();
+		}
+		return cartList;
+	}
+	
+	public static List<Cart> getAdminCart() {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String sql = "select c from Cart c where c.status=1";
+		
+		TypedQuery<Cart> query = em.createQuery(sql, Cart.class);
 		System.out.println(sql);
 		List<Cart> cartList;
 		try {
@@ -242,6 +259,7 @@ public class DBUtil {
 		return true;	
 	}
 	
+
 	public static boolean emailExists(String email){
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		String sql = "select count(u) from Userprofile u where u.email='"
@@ -257,6 +275,22 @@ public class DBUtil {
 			em.close();
 		}
 		return true;	
+	}
+	
+	public static Long itemsInCart(){
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String sql = "select count(c) from Cart c where c.status=0";
+		System.out.println(sql);
+		Query query = em.createQuery(sql, Long.class);
+		Long cart;
+		try {
+			cart = (long) query.getSingleResult();
+			if (cart==null)
+				cart=null;
+		} finally {
+			em.close();
+		}
+		return cart;	
 	}
 	
 }

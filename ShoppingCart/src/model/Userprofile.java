@@ -31,7 +31,7 @@ public class Userprofile implements Serializable {
 	private String zipcode;
 
 	//bi-directional many-to-one association to Cart
-	@OneToMany(mappedBy="userprofile")
+
 	private List<Cart> carts;
 
 	public Userprofile() {

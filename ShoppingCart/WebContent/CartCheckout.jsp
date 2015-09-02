@@ -47,7 +47,13 @@ nav {
 <body>
 <a href="ExploreProducts?goto=y" class="btn pull-right btn-primary btn-lg"  >Go Back</a><br><br>
 		<h1 align=center>
-				<b>Your Cart</b><br><br>
+				<b>Your Cart has ${count} 
+				<% int a = Integer.parseInt(request.getAttribute("count").toString());
+				if(a>1) {%>
+					items 
+					<%} else {%>
+					item<% }%></b><br><br>
+			
 			</h1>	
 		${cartData}			
 	<div>${buttons}</div>

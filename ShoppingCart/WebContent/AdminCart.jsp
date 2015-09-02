@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Online Store</title>
+<title>Online Store-Admin</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -15,19 +15,17 @@
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <style>
 h1 {
-	text-align: left;
+	text-align: center;
 	color: black;
 	font-size: 80px;
 	font-family: "Edwardian Script ITC";
 }
 
 body {
-	font-family: "Time New Roman";
+	font-family: "Times new Roman";
 	color: black;
-	background-image: url("image2.jpg");
-    background-size: cover; 
-    background-color: black; 
-	font-size: 20px;
+
+	font-size: 15px;
 }
 
 navbar {
@@ -38,25 +36,38 @@ navbar {
   .panel-transparent {
         background: none;
     }
+    
+ table td{border-color:red;}
+/*unvisited link*/
+a:link {color: black;}
+/* visited link */
+a:visited {
+    color: black;
+}
+/* mouse over link */
+a:hover {
+    color: red;
+}
+/* selected link */
+a:active {
+    color: red;
+}
 </style>
 </head>
-<nav class="navbar navbar-inverse" style=font-size:30px>
+<nav class="navbar navbar-inverse">
 <div class="container-fluid">
 	<div class="navbar-brand" style=color:red>EvilCorp-Gulp Web Store</div>
+	<div>
+		<ul class="nav navbar-nav">
+			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
+			<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
+		</ul>
+	</div>
 </div>
 </nav>
 <body>
-<a href="AdminLogin.jsp" class="btn pull-right btn-primary btn-sm">Admin</a><br></br>
-	<h1 ><b>Welcome!! 
-		<br> Explore our amazing collection</b>
-	</h1>
-	<br>
-				<form action="ExploreProducts" method="post">
-					 <input type="submit"
-						class="btn pull-left btn-danger btn-lg" value="Explore"></input><br></br>
-				</form>
-				
-				
-				
-				</body>
+<h1><b>All Orders<b></b></h1>
+${message}
+
+</body>
 </html>

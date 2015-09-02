@@ -15,7 +15,7 @@
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <style>
 h1 {
-	text-align: left;
+	text-align: center;
 	color: black;
 	font-size: 80px;
 	font-family: "Edwardian Script ITC";
@@ -24,8 +24,7 @@ h1 {
 body {
 	font-family: "Time New Roman";
 	color: black;
-	background-image: url("image2.jpg");
-    background-size: cover; 
+	background-image: url('image4.jpg');
     background-color: black; 
 	font-size: 20px;
 }
@@ -46,17 +45,37 @@ navbar {
 </div>
 </nav>
 <body>
-<a href="AdminLogin.jsp" class="btn pull-right btn-primary btn-sm">Admin</a><br></br>
-	<h1 ><b>Welcome!! 
-		<br> Explore our amazing collection</b>
+	<h1 ><b>Administrator Login !! </b>
 	</h1>
 	<br>
-				<form action="ExploreProducts" method="post">
+	<br>
+	<br>
+
+
+	<div class="panel-group panel-primary col-sm-3 col-sm-offset-4" style=width:40%>
+			<div class ="panel-heading">
+			Administrator Login
+		</div>
+		<div class="panel panel-inverse">
+			<div class="panel-body">
+				<form action="Admin" method=post>
+					<label>Email:</label> <input type="text"
+						name="email"></input><br></br>
+						<% if (request.getAttribute("error") != null && request.getAttribute("error").toString().length()>0) { %>
+								
+								<div class="alert alert-danger"><p>  ${error}</p></div>
+							<% } %>	
+					<label>Password:</label> <input type="password"
+						name="pwd"></input><br></br>
+						${message}
 					 <input type="submit"
-						class="btn pull-left btn-danger btn-lg" value="Explore"></input><br></br>
+						class="btn pull-left btn-primary btn-lg" value="Admin Login"></input>
 				</form>
-				
-				
-				
-				</body>
+			</div>
+		</div>
+
+
+	</div>
+
+</body>
 </html>

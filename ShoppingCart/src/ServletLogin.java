@@ -40,14 +40,19 @@ public class ServletLogin extends HttpServlet {
 			session.invalidate();
 			getServletContext().getRequestDispatcher("/LoginForm.jsp").forward(request, response);
 		}
+
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
+		String admin = request.getParameter("admin");
+		System.out.println(admin);
+		if(admin!=null){
+			if(admin.equalsIgnoreCase("yes"))
+				getServletContext().getRequestDispatcher("/Admin").forward(request, response);
+		}
 		System.out.println("dopost");
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("pwd");

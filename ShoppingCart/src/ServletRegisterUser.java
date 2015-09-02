@@ -70,8 +70,9 @@ public class ServletRegisterUser extends HttpServlet {
 				DBUtil.insert(user);
 				//get the reviewer id
 				HttpSession session = request.getSession();
-				
-				session.setAttribute("user", user);
+				Userprofile userData = DBUtil.getUser(user.getEmail());
+				System.out.println("Registered user" + userData.getUserId());
+				session.setAttribute("user", userData);
 				getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
 			}
 		}

@@ -2,7 +2,6 @@
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +15,16 @@ import model.Userprofile;
 import customTools.DBUtil;
 
 /**
- * Servlet implementation class ServletOrderConfirmation
+ * Servlet implementation class ServletAdmin
  */
-@WebServlet("/OrderConfirmation")
-public class ServletOrderConfirmation extends HttpServlet {
+@WebServlet("/Admin")
+public class ServletAdmin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServletOrderConfirmation() {
+    public ServletAdmin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,30 +33,43 @@ public class ServletOrderConfirmation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request,response);
+		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();		
-		Userprofile user = (Userprofile) session.getAttribute("user");
-		String message = "";
-		Random r = new Random();
-		int confirmationNumber = 1+ r.nextInt(1000000);
-
-		message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
-		message += showCart();
-		DBUtil.updateStatus(1,user);
-
-		
-		request.setAttribute("message", message);
-		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+		System.out.println("dopost of admin");
+		String email = request.getParameter("email");
+		String pwd = request.getParameter("pwd");
+		System.out.println("email = "  + email);
+		System.out.println("pwd = "  + pwd);
+		if(!Validator.validateEmail(email))
+		{
+			response.sendError(400,"Invalid email");
+		}
+		else
+		{
+			//put button to explore
+			if(!checkAdmin(email,pwd)){
+				response.sendError(400,"Invalid admin email and password");
+			}
+			String message = showCart();
+			request.setAttribute("message", message);
+			getServletContext().getRequestDispatcher("/AdminCart.jsp").forward(request, response);
+		}
+	}
+	
+	private boolean checkAdmin(String email,String pwd){
+		if(!email.equalsIgnoreCase("Admin@evilcorp.com") || !pwd.equals("admin")){
+			return false;
+		}
+		return true;
 	}
 	
 	private String showCart(){
-		List<Cart> cartList = DBUtil.getCart();
+		List<Cart> cartList = DBUtil.getAdminCart();
 		
 		String tableData ="";
 
@@ -106,9 +118,8 @@ public class ServletOrderConfirmation extends HttpServlet {
 			tableData += "</table>";
 		}else
 			tableData="No items are ordered";
-		tableData+="<div><a href='OrderHistory' class='btn pull-left btn-primary'>Order History</a></div>";
+		tableData+="<div><a href='ExploreProducts?logout=y' class='btn btn-danger'>Logout</a></div>";
 		return tableData;
 	}
-
 
 }

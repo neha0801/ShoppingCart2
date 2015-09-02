@@ -45,7 +45,7 @@ navbar {
 </div>
 </nav>
 <body>
-	<div class= "panle panel-primary col-sm-6 col-sm-offset-3" >
+	<div class= "panel panel-primary col-sm-6 col-sm-offset-3" >
 		<div class ="panel-heading">
 			Register User
 		</div>
