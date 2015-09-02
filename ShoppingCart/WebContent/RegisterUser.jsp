@@ -16,19 +16,16 @@
 <style>
 h1 {
 	text-align: center;
-	color: white;
+	color: black;
 	font-size: 80px;
 	font-family: "Edwardian Script ITC";
 }
 
 body {
 	font-family: "Time New Roman";
-	color: black;
-	background-image: url('image.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center; 
-    background-color: black; 
+	color: Black;
+	background-image: url('image4.jpg');
+    background-size: cover; 
 	font-size: 20px;
 }
 
@@ -48,36 +45,37 @@ navbar {
 </div>
 </nav>
 <body>
-	<h1 ><b>Please Login !! </b>
-	</h1>
-	<br>
-	<br>
-	<br>
-
-	<div class="panel-group col-sm-3 col-sm-offset-4" style=width:30%>
-		<div class="panel panel-inverse">
-			<div class="panel-body">
-				<form action="Login" method=post>
-					<label>Email:</label> <input type="text"
-						name="email"></input><br></br>
-						<% if (request.getAttribute("error") != null && request.getAttribute("error").toString().length()>0) { %>
-								
-								<div class="alert alert-danger"><p>  ${error}</p></div>
-							<% } %>	
-					<label>Password:</label> <input type="password"
-						name="pwd"></input><br></br>
-						${message}
-					 <input type="submit"
-						class="btn pull-left btn-primary btn-lg" value="Log In"></input>
-				</form>
-				<form>
-				<a href="RegisterUser.jsp"	class="btn pull-right btn-primary btn-lg">New User</a>
-				</form>
-			</div>
+	<div class= "panle panel-primary col-sm-6 col-sm-offset-3" >
+		<div class ="panel-heading">
+			Register User
 		</div>
+		<div class="panel-body">
+			<form action=RegisterUser method = "POST">
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type="text" class="form-control" name="name"/>
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label>
+					<input type="email" class="form-control" name="email"/>
+				</div>
+				<div class="form-group">
+					<label for="pwd">Password:</label>
+					<input type="password" class="form-control" name="pwd"/>
+				</div>
+				<% if (request.getAttribute("error") != null && request.getAttribute("error").toString().length()>0) { %>
+					
+					<div class="alert alert-danger"><p>  ${error}</p></div>
+				<% } %>	
+				<div class="form-group">
+					<label for="zipcode">ZipCode:</label>
+					<input type="text" class="form-control" name="zipcode"/>
+				</div>
 
-
+				<button type="submit" value = "submit" class= "button btn-primary form-comtrol">Register</button>
+			
+			</form>
+		</div>
 	</div>
-
 </body>
 </html>

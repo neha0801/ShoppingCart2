@@ -65,16 +65,30 @@ public class DBUtil {
 			em.close();
 		}
 	}
+	public static void insert(Userprofile u) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		EntityTransaction trans = em.getTransaction();
+		trans.begin();
+		try {
+			em.persist(u);
+			trans.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+			trans.rollback();
+		} finally {
+			em.close();
+		}
+	}
 
 	public static void update(Cart cart) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Update Cart c set c.quantity = c.quantity +" + cart.getQuantity() + " where c.useremail = '" 
-						/*+ cart.getUseremail()*/ +"' and c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
+		String sql = "Update Cart c set c.quantity = c.quantity +" + cart.getQuantity() + 
+						" where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
 		System.out.println(sql);
 		Query query = em.createQuery(sql, Cart.class);
-		sql = "Update Cart c set c.totalprice= c.quantity *" + cart.getProduct().getPrice()+ " where c.useremail = '" 
-				/*+ cart.getUseremail()*/ +"' and c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
+		sql = "Update Cart c set c.totalprice= c.quantity *" + cart.getProduct().getPrice()
+				+ " where c.product.productid=" + cart.getProduct().getProductid() + " and c.status=0";
 		Query query1 = em.createQuery(sql, Cart.class);
 		System.out.println(sql);
 		trans.begin();
@@ -90,13 +104,12 @@ public class DBUtil {
 		}
 	}
 	
-	public static void updateStatus(int status, String user) {
+	public static void updateStatus(int status,Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Update Cart c set c.status = " + status + " where c.useremail = '" 
-						+ user +"'";
+		String sql = "Update Cart c set c.userprofile = :user, c.status = 1 where c.status = 0";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
 		System.out.println(sql);
 		trans.begin();
 		try {
@@ -110,11 +123,10 @@ public class DBUtil {
 		}
 	}
 	
-	public static void delete(String user, int prodId) {
+	public static void delete(int prodId) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Delete from Cart c  where c.useremail = '" 
-						+ user +"' and c.product.productid=" + prodId + " and c.status=0";
+		String sql = "Delete from Cart c  where c.product.productid=" + prodId + " and c.status=0";
 		System.out.println(sql);
 		Query query = em.createQuery(sql, Cart.class);
 		trans.begin();
@@ -129,13 +141,12 @@ public class DBUtil {
 		}
 	}
 
-	public static void deleteAll(String user) {
+	public static void deleteAll(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction trans = em.getTransaction();
-		String sql = "Delete from Cart c  where c.useremail = '" 
-						+ user +"' and c.status=0";
+		String sql = "Delete from Cart c  where c.userprofile = :user and c.status=0";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
 		trans.begin();
 		try {
 			query.executeUpdate();
@@ -148,9 +159,9 @@ public class DBUtil {
 		}
 	}
 
-	public static List<Cart> getCart(String user) {
+	public static List<Cart> getCart() {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select c from Cart c where c.useremail='" + user + "' and c.status=0";
+		String sql = "select c from Cart c where c.status=0";
 		System.out.println(sql);
 		TypedQuery<Cart> query = em.createQuery(sql, Cart.class);
 		List<Cart> cartList;
@@ -164,11 +175,12 @@ public class DBUtil {
 		return cartList;
 	}
 	
-	public static List<Cart> getOrderedCart(String user) {
+	public static List<Cart> getOrderedCart(Userprofile user) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select c from Cart c where c.useremail='" + user + "' and c.status=1";
+		String sql = "select c from Cart c where c.userprofile = :user and c.status=1";
+		
+		TypedQuery<Cart> query = em.createQuery(sql, Cart.class).setParameter("user", user);
 		System.out.println(sql);
-		TypedQuery<Cart> query = em.createQuery(sql, Cart.class);
 		List<Cart> cartList;
 		try {
 			cartList = query.getResultList();
@@ -178,12 +190,27 @@ public class DBUtil {
 			em.close();
 		}
 		return cartList;
+	}
+	
+	public static Userprofile getUser(String email) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String sql = "select u from Userprofile u where u.email='" + email + "'";
+		System.out.println(sql);
+		TypedQuery<Userprofile> query = em.createQuery(sql, Userprofile.class);
+		Userprofile user;
+		try {
+			user = query.getSingleResult();
+			if (user == null)
+				user = null;
+		} finally {
+			em.close();
+		}
+		return user;
 	}
 
 	public static boolean itemExists(Cart cObj) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		String sql = "select count(c) from Cart c where c.useremail='"
-				+ /*cObj.getUseremail() +*/ "' and c.product.productid="
+		String sql = "select count(c) from Cart c where c.product.productid="
 				+ cObj.getProduct().getProductid() + " and c.status=0";
 		System.out.println(sql);
 		Query query = em.createQuery(sql, Cart.class);
@@ -203,7 +230,7 @@ public class DBUtil {
 		String sql = "select count(u) from Userprofile u where u.email='"
 				+ email +"' and u.pwd='" + password + "'";
 		System.out.println(sql);
-		Query query = em.createQuery(sql, Cart.class);
+		Query query = em.createQuery(sql, Userprofile.class);
 		long product;
 		try {
 			product = (long) query.getSingleResult();
@@ -214,4 +241,22 @@ public class DBUtil {
 		}
 		return true;	
 	}
+	
+	public static boolean emailExists(String email){
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String sql = "select count(u) from Userprofile u where u.email='"
+				+ email +"'";
+		System.out.println(sql);
+		Query query = em.createQuery(sql, Userprofile.class);
+		long user;
+		try {
+			user = (long) query.getSingleResult();
+			if (user<1)
+				return false;
+		} finally {
+			em.close();
+		}
+		return true;	
+	}
+	
 }

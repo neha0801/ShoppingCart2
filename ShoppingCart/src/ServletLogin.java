@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Userprofile;
 import customTools.DBUtil;
 
 /**
@@ -52,7 +53,6 @@ public class ServletLogin extends HttpServlet {
 		String pwd = request.getParameter("pwd");
 		System.out.println("email = "  + email);
 		System.out.println("pwd = "  + pwd);
-		String message ="";
 		if(!Validator.validateEmail(email))
 		{
 			response.sendError(400,"Invalid email");
@@ -63,6 +63,14 @@ public class ServletLogin extends HttpServlet {
 			if(!DBUtil.validateUser(email, pwd)){
 				response.sendError(400,"User does not exist");
 			}
+			
+			Userprofile user =DBUtil.getUser(email);
+			HttpSession session = request.getSession();		
+			System.out.println("session " +session.getAttribute("user"));
+			if (session.getAttribute("user")==null){
+				session.setAttribute("user", user);
+			}
+			getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
 		}
 	}
 

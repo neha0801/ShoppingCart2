@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Userprofile;
 import customTools.DBUtil;
 
 /**
@@ -45,13 +46,13 @@ public class ServletEditCart extends HttpServlet {
 			prodId = Integer.parseInt(idStr);
 		}
 		HttpSession session = request.getSession();
-		String user = (String) session.getAttribute("user");
+		Userprofile user = (Userprofile) session.getAttribute("user");
 		String emptyCart = request.getParameter("empty");
 		if(emptyCart !=null){
 			if(emptyCart.equalsIgnoreCase("y"))
 				DBUtil.deleteAll(user);
 		}else
-			DBUtil.delete(user, prodId);
+			DBUtil.delete(prodId);
 		getServletContext().getRequestDispatcher("/Cart").forward(request, response);
 	}
 

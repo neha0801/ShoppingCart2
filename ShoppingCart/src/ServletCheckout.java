@@ -2,7 +2,6 @@
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +15,16 @@ import model.Userprofile;
 import customTools.DBUtil;
 
 /**
- * Servlet implementation class ServletOrderConfirmation
+ * Servlet implementation class ServletCheckout
  */
-@WebServlet("/OrderConfirmation")
-public class ServletOrderConfirmation extends HttpServlet {
+@WebServlet("/Checkout")
+public class ServletCheckout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServletOrderConfirmation() {
+    public ServletCheckout() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,6 +33,7 @@ public class ServletOrderConfirmation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("checkout do get");
 		doPost(request,response);
 	}
 
@@ -41,22 +41,18 @@ public class ServletOrderConfirmation extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("checkout do post");
 		HttpSession session = request.getSession();		
 		Userprofile user = (Userprofile) session.getAttribute("user");
-		String message = "";
-		Random r = new Random();
-		int confirmationNumber = 1+ r.nextInt(1000000);
-		DBUtil.updateStatus(1,user);
-		message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
-		message += showCart(user);
-
-		
+		request.setAttribute("user", user.getUserName());
+		String message="";
+		message = showCart();
 		request.setAttribute("message", message);
-		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/Checkout.jsp").forward(request, response);
 	}
 	
-	private String showCart(Userprofile user){
-		List<Cart> cartList = DBUtil.getOrderedCart(user);
+	private String showCart(){
+		List<Cart> cartList = DBUtil.getCart();
 		
 		String tableData ="";
 
@@ -103,11 +99,11 @@ public class ServletOrderConfirmation extends HttpServlet {
 				tableData += "</tr>";
 			}
 			tableData += "</table>";
+			tableData+= "<a href='OrderConfirmation' class= 'btn pull-right btn-warning'>Place your order</a>";
 		}else
-			tableData="No items are ordered";
-		tableData+="<div><a href='OrderHistory' class='btn pull-left btn-primary'>Order History</a></div>";
+			tableData="Your Cart is empty";
+
 		return tableData;
 	}
-
 
 }

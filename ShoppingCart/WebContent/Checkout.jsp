@@ -17,59 +17,54 @@
 h1 {
 	text-align: center;
 	color: black;
-	font-size: 80px;
+	font-size: 50px;
 	font-family: "Edwardian Script ITC";
 }
 
 body {
-	font-family: "Times new Roman";
-	color: black;
-
-	font-size: 15px;
+	font-family: "Time New Roman";
+	color: Black;
+	background-color: url('image.jpg');
+    background-size: cover; 
+	font-size: 20px;
 }
 
-navbar {
+nav {
 	font-family: "Edwardian Script ITC";
 	color: red;
-	;
 }
-  .panel-transparent {
-        background: none;
-    }
-    
- table td{border-color:red;}
-/*unvisited link*/
-a:link {color: black;}
-/* visited link */
-a:visited {
-    color: black;
-}
-/* mouse over link */
-a:hover {
-    color: red;
-}
-/* selected link */
-a:active {
-    color: red;
-}
+ 
 </style>
 </head>
 <nav class="navbar navbar-inverse">
 <div class="container-fluid">
-	<div class="navbar-brand" style=color:red>EvilCorp-Gulp Web Store</div>
+	<div class="navbar-brand">EvilCorp-Gulp Web Store</div>
 	<div>
 		<ul class="nav navbar-nav">
-			<li class=active ><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
+			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
 		</ul>
 	</div>
 </div>
 </nav>
 <body>
+<a href="ExploreProducts?goto=y" class="btn pull-right btn-primary btn-lg"  >Go Back</a><br><br>
 		<h1 align=center>
-				<b>Watches</b>
-			</h1>
-	<table class="table table-bordered table-striped">
-		${tableData}
-	</table>
+				<b>Confirm your order</b><br><br>
+			</h1>	
+		<div class="panel panel-primary col-sm-3 col-sm">
+		<div class="panel-heading">
+			Payment Method
+		</div>
+		<div class="panel-body">
+			<form>
+				<div class="form-group">
+				<input type="radio" name="paymentType" value ="1" checked>Credit card<br>
+				<input type="radio" name="paymentType" value ="2">Debit card<br>
+				<input type="radio" name="paymentType" value ="3">Paypal<br>
+				</div>
+				</form>
+				</div>
+				</div>
+	<div>${message}</div>
 </body>
 </html>

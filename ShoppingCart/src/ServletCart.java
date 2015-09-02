@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import customTools.DBUtil;
 import model.Cart;
 import model.Product;
+import model.Userprofile;
 
 /**
  * Servlet implementation class ServletCart
@@ -43,8 +44,8 @@ public class ServletCart extends HttpServlet {
 		String quanStr= request.getParameter("quantity");
 		HttpSession session = request.getSession();
 		Product prodObj= (Product) session.getAttribute("product");
-		String userEmail = (String) session.getAttribute("user");
-
+		Userprofile user = (Userprofile) session.getAttribute("user");
+		//user.setUserId(0);
 		Cart cObj = new Cart();
 		if(quanStr!=null){
 			int quantity = Integer.parseInt(quanStr);
@@ -52,6 +53,7 @@ public class ServletCart extends HttpServlet {
 			Double totalPrice = quantity * prodObj.getPrice().doubleValue();  
 			cObj.setTotalprice(totalPrice);
 			cObj.setProduct(prodObj);
+			cObj.setUserprofile(user);
 			//cObj.setUseremail(userEmail);
 			cObj.setStatus(0);
 			if(DBUtil.itemExists(cObj)){
@@ -59,18 +61,22 @@ public class ServletCart extends HttpServlet {
 			}else
 				DBUtil.insert(cObj);
 		}		
-		String cartData = showCart(userEmail);
+		String cartData = showCart();
 		request.setAttribute("cartData", cartData);
 		String buttons= "";
-		buttons +=  "<br><a href='OrderConfirmation' class='btn pull-right btn-primary btn-lg'>CheckOut & Order History</a>";
+		System.out.println(user);
+		if(user!=null){
+			buttons +=  "<br><a href='Checkout' class='btn pull-right btn-primary btn-lg'>Checkout</a>";
+		}else
+			buttons +=  "<br><a href='UserProfile.jsp' class='btn pull-right btn-primary btn-lg'>CheckOut</a>";
 		buttons +=  "<a href='EditCart?empty=y'class='btn pull-left btn-warning btn-lg'>Empty your cart</a>";
 		request.setAttribute("buttons", buttons);
-		request.setAttribute("user", userEmail);
+		//request.setAttribute("user", user);
 		getServletContext().getRequestDispatcher("/CartCheckout.jsp").forward(request, response);
 	}
 	
-	private String showCart(String userEmail){
-		List<Cart> cartList = DBUtil.getCart(userEmail);
+	private String showCart(){
+		List<Cart> cartList = DBUtil.getCart();
 		Double checkoutPrice=0.0;
 		String tableData ="";
 

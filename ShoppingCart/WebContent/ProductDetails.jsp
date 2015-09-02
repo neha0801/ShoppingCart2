@@ -50,8 +50,6 @@ function validateForm() {
 	<div>
 		<ul class="nav navbar-nav">
 			<li><a href="ExplorePorducts?goto=y" style="color: white"><b>Home</b></a></li>
-			<li><a href="Cart" style="color: white"><b>Your Cart</b></a></li>	
-			<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
 			
 		</ul>
 	</div>

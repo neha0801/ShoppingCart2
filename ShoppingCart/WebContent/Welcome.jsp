@@ -50,13 +50,9 @@ navbar {
 		<br> Explore our amazing collection</b>
 	</h1>
 	<br>
-				<form action="ExploreProducts" method=post>
+				<form action="ExploreProducts" method="post">
 					 <input type="submit"
 						class="btn pull-left btn-danger btn-lg" value="Explore"></input><br></br>
 				</form>
-				<form>
-					 <a href="UserProfile.jsp" class="btn pull-left btn-primary btn-lg" >Log In</a><br></br>
-				</form>
-
-</body>
+				</body>
 </html>

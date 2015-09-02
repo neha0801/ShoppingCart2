@@ -2,7 +2,6 @@
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +15,16 @@ import model.Userprofile;
 import customTools.DBUtil;
 
 /**
- * Servlet implementation class ServletOrderConfirmation
+ * Servlet implementation class ServletOrderHistory
  */
-@WebServlet("/OrderConfirmation")
-public class ServletOrderConfirmation extends HttpServlet {
+@WebServlet("/OrderHistory")
+public class ServletOrderHistory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServletOrderConfirmation() {
+    public ServletOrderHistory() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,30 +33,22 @@ public class ServletOrderConfirmation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request,response);
+		HttpSession session = request.getSession();
+		model.Userprofile user = (Userprofile) session.getAttribute("user");
+		String message = showOrderHistory(user);
+		request.setAttribute("message", message);
+		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();		
-		Userprofile user = (Userprofile) session.getAttribute("user");
-		String message = "";
-		Random r = new Random();
-		int confirmationNumber = 1+ r.nextInt(1000000);
-		DBUtil.updateStatus(1,user);
-		message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
-		message += showCart(user);
-
-		
-		request.setAttribute("message", message);
-		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+		// TODO Auto-generated method stub
 	}
-	
-	private String showCart(Userprofile user){
-		List<Cart> cartList = DBUtil.getOrderedCart(user);
-		
+	private String showOrderHistory(Userprofile user){
+		List<model.Cart>  cartList = DBUtil.getOrderedCart(user);
 		String tableData ="";
 
 		if(cartList!=null)
@@ -104,10 +95,9 @@ public class ServletOrderConfirmation extends HttpServlet {
 			}
 			tableData += "</table>";
 		}else
-			tableData="No items are ordered";
-		tableData+="<div><a href='OrderHistory' class='btn pull-left btn-primary'>Order History</a></div>";
+			tableData="No order history!!";
+		
+		tableData+="<div><a href='ExploreProducts' class='btn pull-left btn-primary'>Explore more products</a></div>";
 		return tableData;
 	}
-
-
 }

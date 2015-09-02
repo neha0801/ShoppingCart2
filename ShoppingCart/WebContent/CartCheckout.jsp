@@ -39,9 +39,7 @@ nav {
 	<div class="navbar-brand">EvilCorp-Gulp Web Store</div>
 	<div>
 		<ul class="nav navbar-nav">
-			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>			
-			<li><a href="Cart" style="color: white"><b>Your Cart</b></a></li>
-			<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
+			<li><a href="ExploreProducts?goto=y" style="color: white"><b>Home</b></a></li>
 		</ul>
 	</div>
 </div>
@@ -49,7 +47,7 @@ nav {
 <body>
 <a href="ExploreProducts?goto=y" class="btn pull-right btn-primary btn-lg"  >Go Back</a><br><br>
 		<h1 align=center>
-				<b>${user}'s Cart</b><br><br>
+				<b>Your Cart</b><br><br>
 			</h1>	
 		${cartData}			
 	<div>${buttons}</div>
