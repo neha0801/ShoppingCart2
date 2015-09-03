@@ -65,7 +65,9 @@ a:active {
 			if(user!=null){  request.setAttribute("userName", user.getUserName()); %>
 				<li><a href="Cart" style="color: white"><b>${userName}'s Cart</b></a></li>
 				<li><a href="ExploreProducts?logout=y" style="color: white"><b>Logout</b></a></li>
-			<%}	%>
+			<%}	else if (user== null){%>
+			<li><a href="UserProfile.jsp" style="color: white"><b>Login</b></a></li>
+			<%} %>
 		</ul>
 	</div>
 </div>

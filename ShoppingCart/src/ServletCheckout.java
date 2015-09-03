@@ -45,9 +45,13 @@ public class ServletCheckout extends HttpServlet {
 		HttpSession session = request.getSession();		
 		Userprofile user = (Userprofile) session.getAttribute("user");
 		request.setAttribute("user", user.getUserName());
+		//String mesg="";
+		//mesg=(String) request.getAttribute("error");
 		String message="";
-		message = showCart(user);
+		//message = "<h2 style='color:red'>"+mesg+ "</h2>";
+		message += showCart(user);
 		request.setAttribute("message", message);
+	
 		getServletContext().getRequestDispatcher("/Checkout.jsp").forward(request, response);
 	}
 	
@@ -99,7 +103,7 @@ public class ServletCheckout extends HttpServlet {
 				tableData += "</tr>";
 			}
 			tableData += "</table>";
-			tableData+= "<a href='OrderConfirmation' class= 'btn pull-right btn-warning'>Place your order</a>";
+			tableData+= "<input type='submit' class='btn pull-right btn-warning' value='Place your order'></input>";
 		}else
 			tableData="Your Cart is empty";
 

@@ -79,6 +79,21 @@ public class DBUtil {
 			em.close();
 		}
 	}
+	
+	public static void insert(Payment p) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		EntityTransaction trans = em.getTransaction();
+		trans.begin();
+		try {
+			em.persist(p);
+			trans.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+			trans.rollback();
+		} finally {
+			em.close();
+		}
+	}
 
 	public static void update(Cart cart) {
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
@@ -337,6 +352,41 @@ public class DBUtil {
 		return true;	
 	}
 	
+	public static boolean userPayExist(Userprofile user){
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String sql = "select count(p) from Payment p where p.userprofile=:user";
+		System.out.println(sql);
+		Query query = em.createQuery(sql, Userprofile.class).setParameter("user", user);
+		long count;
+		try {
+			count = (long) query.getSingleResult();
+			if (count<1)
+				return false;
+		} finally {
+			em.close();
+		}
+		return true;	
+	}
+	
+	public static void updatePayUser(Userprofile user) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		EntityTransaction trans = em.getTransaction();
+		String sql = "Update Payment p set p.userprofile = :user";
+		System.out.println(sql);
+		Query query = em.createQuery(sql, Cart.class).setParameter("user", user);
+		System.out.println(sql);
+		trans.begin();
+		try {
+			query.executeUpdate();
+			trans.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+			trans.rollback();
+		} finally {
+			em.close();
+		}
+	}
+		
 	public static Long itemsInCart(Userprofile user){
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		Query query;

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.Cart;
+import model.Payment;
 import model.Userprofile;
 import customTools.DBUtil;
 
@@ -44,16 +45,25 @@ public class ServletOrderConfirmation extends HttpServlet {
 		HttpSession session = request.getSession();		
 		Userprofile user = (Userprofile) session.getAttribute("user");
 		String message = "";
-		Random r = new Random();
-		int confirmationNumber = 1+ r.nextInt(1000000);
+		System.out.println("fvdsjgfd");
+		if(paymentRecorded(request,response,user))
+		{
+			Random r = new Random();
+			int confirmationNumber = 1+ r.nextInt(1000000);
 
-		message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
-		message += showCart(user);
-		DBUtil.updateStatus(1,user);
+			message += "<h1> Your Order confirmation number is " + confirmationNumber + "</h1>";
+			message += showCart(user);
+			DBUtil.updateStatus(1,user);
 
-		
-		request.setAttribute("message", message);
-		getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+			
+			request.setAttribute("message", message);
+			getServletContext().getRequestDispatcher("/OrderConfirmation.jsp").forward(request, response);
+	
+		} else{
+			System.out.println("payment not recoreded");
+			request.setAttribute("error", "Invalid card details!!!");
+			getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
+		}
 	}
 	
 	private String showCart(Userprofile user){
@@ -83,7 +93,7 @@ public class ServletOrderConfirmation extends HttpServlet {
 			tableData += "</th>";
 			tableData += "</thead>";
 			tableData += "</tr>";
-			
+			System.out.println();
 			for(Cart c : cartList){
 				tableData += "<tr>";
 				tableData += "<td>";
@@ -110,5 +120,40 @@ public class ServletOrderConfirmation extends HttpServlet {
 		return tableData;
 	}
 
+	private boolean paymentRecorded(HttpServletRequest request,HttpServletResponse response,Userprofile user){
+		String cardNoStr = request.getParameter("cardNo");
+		String dateStr = request.getParameter("expiryDate");
+		String cvvStr = request.getParameter("cvv");
+		String shippingAdd = request.getParameter("shipaddress") +", " 
+							+ request.getParameter("shipcity") + ", "
+							+ request.getParameter("shipstate") + ", "
+							+ request.getParameter("shipzipcode");
+
+		String billingAdd = request.getParameter("billaddress") +", " 
+							+ request.getParameter("billcity") + ", "
+							+ request.getParameter("billstate") + ", "
+							+ request.getParameter("billzipcode");
+		
+		if(!Validator.validateInt(cardNoStr) || !Validator.validateInt(cvvStr)||
+				!Validator.validateDateWithFormat(dateStr)){
+			System.out.println("error");
+			return false;
+		}
+		Payment pay = new Payment();
+		Long card = Long.parseLong(cardNoStr);
+		//System.out.println("card number " + card);
+		pay.setCardnumber(card);
+		pay.setShippingAddress(shippingAdd);
+		pay.setBillingAddress(billingAdd);
+		pay.setUserprofile(user);
+		
+		//check existing user
+		if(DBUtil.userPayExist(user)){
+			DBUtil.updatePayUser(user);
+		}else
+			DBUtil.insert(pay);
+		return true;
+		
+	}
 
 }

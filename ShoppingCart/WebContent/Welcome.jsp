@@ -55,7 +55,10 @@ navbar {
 					 <input type="submit"
 						class="btn pull-left btn-danger btn-lg" value="Explore"></input><br></br>
 				</form>
-				
+				<form action="UserProfile.jsp" >
+					 <input type="submit"
+						class="btn pull-left btn-primary btn-lg" value="Sign In"></input><br></br>
+				</form>
 				
 				
 				</body>

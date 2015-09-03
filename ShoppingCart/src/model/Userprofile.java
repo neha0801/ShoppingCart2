@@ -1,9 +1,7 @@
 package model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-
 import java.util.List;
 
 
@@ -12,7 +10,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="Userprofile",schema="testdb")
+@Table(name="Userprofile",schema="testDb")
 @NamedQuery(name="Userprofile.findAll", query="SELECT u FROM Userprofile u")
 public class Userprofile implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,8 +29,12 @@ public class Userprofile implements Serializable {
 	private String zipcode;
 
 	//bi-directional many-to-one association to Cart
-
+	@OneToMany(mappedBy="userprofile")
 	private List<Cart> carts;
+
+	//bi-directional many-to-one association to Payment
+	@OneToMany(mappedBy="userprofile")
+	private List<Payment> payments;
 
 	public Userprofile() {
 	}
@@ -97,6 +99,28 @@ public class Userprofile implements Serializable {
 		cart.setUserprofile(null);
 
 		return cart;
+	}
+
+	public List<Payment> getPayments() {
+		return this.payments;
+	}
+
+	public void setPayments(List<Payment> payments) {
+		this.payments = payments;
+	}
+
+	public Payment addPayment(Payment payment) {
+		getPayments().add(payment);
+		payment.setUserprofile(this);
+
+		return payment;
+	}
+
+	public Payment removePayment(Payment payment) {
+		getPayments().remove(payment);
+		payment.setUserprofile(null);
+
+		return payment;
 	}
 
 }

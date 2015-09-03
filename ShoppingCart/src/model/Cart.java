@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 
 
@@ -10,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="Cart",schema="testdb")
+@Table(name="Cart",schema="testDb")
 @NamedQuery(name="Cart.findAll", query="SELECT c FROM Cart c")
 public class Cart implements Serializable {
 	private static final long serialVersionUID = 1L;

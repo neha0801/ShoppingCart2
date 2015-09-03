@@ -21,4 +21,17 @@ public class Validator
 		}
 		return isValid;
 	}
+	public static boolean validateInt(String numberStr)
+	{
+		boolean isValid = false;
+		isValid = numberStr.matches("^\\d+$");
+		return isValid;
+	}
+	
+	public static boolean validateDateWithFormat(String dateStr)
+	{
+		boolean isValid = false;
+		isValid = dateStr.matches("(0?[1-9]|1[012])/((19|20)\\d\\d)");
+		return isValid;
+	}
 }

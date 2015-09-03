@@ -73,6 +73,7 @@ public class ServletRegisterUser extends HttpServlet {
 				Userprofile userData = DBUtil.getUser(user.getEmail());
 				System.out.println("Registered user" + userData.getUserId());
 				session.setAttribute("user", userData);
+				DBUtil.updateUserCart(userData);
 				getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
 			}
 		}
