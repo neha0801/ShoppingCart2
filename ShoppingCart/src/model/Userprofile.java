@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  * 
  */
 @Entity
+@Table(name="Userprofile",schema="testdb")
 @NamedQuery(name="Userprofile.findAll", query="SELECT u FROM Userprofile u")
 public class Userprofile implements Serializable {
 	private static final long serialVersionUID = 1L;
