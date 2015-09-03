@@ -33,7 +33,7 @@ public class ServletAdmin extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		doPost(request,response);
 	}
 
 	/**
@@ -45,20 +45,27 @@ public class ServletAdmin extends HttpServlet {
 		String pwd = request.getParameter("pwd");
 		System.out.println("email = "  + email);
 		System.out.println("pwd = "  + pwd);
-		if(!Validator.validateEmail(email))
+		//put button to explore
+		HttpSession session = request.getSession();
+		String creditStr = (String) session.getAttribute("credit");
+		if(creditStr!=null){
+			if(creditStr.equalsIgnoreCase("yes")){
+				String message = showCart();
+				request.setAttribute("message", message);
+				getServletContext().getRequestDispatcher("/AdminCart.jsp").forward(request, response);
+			}
+		}else
 		{
-			response.sendError(400,"Invalid email");
-		}
-		else
-		{
-			//put button to explore
 			if(!checkAdmin(email,pwd)){
-				response.sendError(400,"Invalid admin email and password");
+				request.setAttribute("error", "Invalid credentials");
+				getServletContext().getRequestDispatcher("/AdminLogin.jsp").forward(request, response);
+				return;
 			}
 			String message = showCart();
 			request.setAttribute("message", message);
 			getServletContext().getRequestDispatcher("/AdminCart.jsp").forward(request, response);
 		}
+		
 	}
 	
 	private boolean checkAdmin(String email,String pwd){
@@ -79,6 +86,9 @@ public class ServletAdmin extends HttpServlet {
 			tableData += "<tr>";
 			tableData += "<thead>";
 			tableData += "<th>";
+			tableData += "User Name";
+			tableData += "</th>";
+			tableData += "<th>";
 			tableData += "";
 			tableData += "</th>";
 			tableData += "<th>"; 
@@ -93,11 +103,17 @@ public class ServletAdmin extends HttpServlet {
 			tableData += "<th>";
 			tableData += "TotalPrice";
 			tableData += "</th>";
+			tableData += "<th>";
+			tableData += "User Credit";
+			tableData += "</th>";
 			tableData += "</thead>";
 			tableData += "</tr>";
 			
 			for(Cart c : cartList){
 				tableData += "<tr>";
+				tableData += "<td>";
+				tableData += c.getUserprofile().getUserName();
+				tableData += "</td>";
 				tableData += "<td>";
 				tableData += "<img src='" + c.getProduct().getPicturepath() + "' width ='200' height='200' style=align:center>";
 				tableData += "</td>";
@@ -112,6 +128,10 @@ public class ServletAdmin extends HttpServlet {
 				tableData += "</td>";
 				tableData += "<td>";
 				tableData +=  "$"+c.getTotalprice();
+				tableData += "</td>";
+				tableData += "<td>";
+				tableData +=  c.getUserprofile().getCredit() + "<br>" + "<a href='EditCredit?email="+ c.getUserprofile().getEmail()+ "&add=y' class='btn btn-success'>Add Credit</a>"
+						+ "<br><br><br>" +"<a href='EditCredit?email="+ c.getUserprofile().getEmail()+ "&remove=y' class='btn btn-danger'>Remove Credit</a>";
 				tableData += "</td>";
 				tableData += "</tr>";
 			}

@@ -411,4 +411,23 @@ public class DBUtil {
 		return cart;	
 	}
 	
+	public static void updateUsercredit(Userprofile user) {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		EntityTransaction trans = em.getTransaction();
+		String sql = "Update Userprofile u set u.credit = " + user.getCredit() + " where u.userId =" + user.getUserId();
+		System.out.println(sql);
+		Query query = em.createQuery(sql, Cart.class);
+		System.out.println(sql);
+		trans.begin();
+		try {
+			query.executeUpdate();
+			trans.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+			trans.rollback();
+		} finally {
+			em.close();
+		}
+	}
+	
 }

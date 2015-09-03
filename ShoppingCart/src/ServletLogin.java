@@ -76,7 +76,7 @@ public class ServletLogin extends HttpServlet {
 				session.setAttribute("user", user);
 			}
 			DBUtil.updateUserCart(user);
-			getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
+			getServletContext().getRequestDispatcher("/Welcome.jsp").forward(request, response);
 		}
 	}
 
