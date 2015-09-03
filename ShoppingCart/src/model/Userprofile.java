@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
+import java.math.BigDecimal;
 
 
 /**
@@ -10,7 +10,6 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="Userprofile",schema="testDb")
 @NamedQuery(name="Userprofile.findAll", query="SELECT u FROM Userprofile u")
 public class Userprofile implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +17,8 @@ public class Userprofile implements Serializable {
 	@Id
 	@Column(name="USER_ID")
 	private long userId;
+
+	private double credit;
 
 	private String email;
 
@@ -28,14 +29,6 @@ public class Userprofile implements Serializable {
 
 	private String zipcode;
 
-	//bi-directional many-to-one association to Cart
-	@OneToMany(mappedBy="userprofile")
-	private List<Cart> carts;
-
-	//bi-directional many-to-one association to Payment
-	@OneToMany(mappedBy="userprofile")
-	private List<Payment> payments;
-
 	public Userprofile() {
 	}
 
@@ -45,6 +38,14 @@ public class Userprofile implements Serializable {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public double getCredit() {
+		return this.credit;
+	}
+
+	public void setCredit(double credit) {
+		this.credit = credit;
 	}
 
 	public String getEmail() {
@@ -77,50 +78,6 @@ public class Userprofile implements Serializable {
 
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
-	}
-
-	public List<Cart> getCarts() {
-		return this.carts;
-	}
-
-	public void setCarts(List<Cart> carts) {
-		this.carts = carts;
-	}
-
-	public Cart addCart(Cart cart) {
-		getCarts().add(cart);
-		cart.setUserprofile(this);
-
-		return cart;
-	}
-
-	public Cart removeCart(Cart cart) {
-		getCarts().remove(cart);
-		cart.setUserprofile(null);
-
-		return cart;
-	}
-
-	public List<Payment> getPayments() {
-		return this.payments;
-	}
-
-	public void setPayments(List<Payment> payments) {
-		this.payments = payments;
-	}
-
-	public Payment addPayment(Payment payment) {
-		getPayments().add(payment);
-		payment.setUserprofile(this);
-
-		return payment;
-	}
-
-	public Payment removePayment(Payment payment) {
-		getPayments().remove(payment);
-		payment.setUserprofile(null);
-
-		return payment;
 	}
 
 }

@@ -74,7 +74,7 @@ public class ServletRegisterUser extends HttpServlet {
 				System.out.println("Registered user" + userData.getUserId());
 				session.setAttribute("user", userData);
 				DBUtil.updateUserCart(userData);
-				getServletContext().getRequestDispatcher("/Checkout").forward(request, response);
+				getServletContext().getRequestDispatcher("/Welcome.jsp").forward(request, response);
 			}
 		}
 

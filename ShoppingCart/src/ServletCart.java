@@ -133,8 +133,8 @@ public class ServletCart extends HttpServlet {
 				checkoutPrice+=c.getTotalprice();
 			}
 			tableData+="</table></div>";
-			tableData+= "<label class='pull-right'>Tax: $" + checkoutPrice*0.06 + "</label><br><br>";
-			tableData+="<label class='btn pull-right btn-info btn-sm'>Total Price: $" + checkoutPrice + "</label><br><br>";
+			tableData+= "<label class='pull-right'>Tax: $" + (checkoutPrice*0.06) + "</label><br><br>";
+			tableData+="<label class='btn pull-right btn-info btn-sm'>Total Price: $" + (checkoutPrice +(checkoutPrice*0.06)) + "</label><br><br>";
 		}else
 			tableData="Your Cart is empty";
 		
